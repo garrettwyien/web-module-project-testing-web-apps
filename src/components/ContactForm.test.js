@@ -5,25 +5,59 @@ import App from '../App';
 import ContactForm from './ContactForm';
 
 test('renders without errors', ()=>{
-    render(<App/>);
+    render(<ContactForm/>);
 });
 
 test('renders the contact form header', ()=> {
-    render(<App/>);
+    render(<ContactForm/>);
     const header = screen.getByText('Contact Form');
     expect(header).toBeInTheDocument();
 });
 
 test('renders ONE error message if user enters less then 5 characters into firstname.', async () => {
-    
+    render(<ContactForm/>);
+    const placeHolder = 'Edd';
+    const firstNameInput = screen.getByPlaceholderText(placeHolder);
+    const inputText = 'abcd';
+    userEvent.type(firstNameInput, inputText);
+    const errorTextFirst = 'must have at least 5 characters.'; 
+    const errorTextLast = 'is a required field.';
+    const errorTextEmail = 'must be a valid email address.';
+    expect(errorTextFirst).toBeInTheDocument;
+    expect(errorTextLast).not.toBeInTheDocument;
+    expect(errorTextEmail).not.toBeInTheDocument;
 });
 
 test('renders THREE error messages if user enters no values into any fields.', async () => {
-    
+    render(<ContactForm/>);
+    const placeHolder = 'Edd';
+    const firstNameInput = screen.getByPlaceholderText(placeHolder);
+    userEvent.type(firstNameInput, '{enter}');
+    const errorTextFirst = 'must have at least 5 characters.'; 
+    const errorTextLast = 'is a required field.';
+    const errorTextEmail = 'must be a valid email address.';
+    expect(errorTextFirst).toBeInTheDocument;
+    expect(errorTextLast).toBeInTheDocument;
+    expect(errorTextEmail).toBeInTheDocument;
 });
 
 test('renders ONE error message if user enters a valid first name and last name but no email.', async () => {
-    
+    render(<ContactForm/>);
+    const placeHolderFirst = 'Edd';
+    const firstNameInput = screen.getByPlaceholderText(placeHolderFirst);
+    const inputTextFirst = 'abcde';
+    userEvent.type(firstNameInput, inputTextFirst);
+    const placeHolderLast = 'Burke'
+    const lastNameInput = screen.getByPlaceholderText(placeHolderLast);
+    const inputTextLast = 'a';
+    userEvent.type(lastNameInput, inputTextLast);
+    userEvent.type(lastNameInput, '{enter}');
+    const errorTextFirst = 'must have at least 5 characters.'; 
+    const errorTextLast = 'is a required field.';
+    const errorTextEmail = 'must be a valid email address.';
+    expect(errorTextFirst).not.toBeInTheDocument;
+    expect(errorTextLast).not.toBeInTheDocument;
+    expect(errorTextEmail).toBeInTheDocument;
 });
 
 test('renders "email must be a valid email address" if an invalid email is entered', async () => {
